@@ -15,6 +15,7 @@ state_left = win32api.GetKeyState(0x01)
 state_right = win32api.GetKeyState(0x02)
 
 mouseClickLocations = []
+keyboardClicks = []
 
 while True:
     a = win32api.GetKeyState(0x01)
@@ -38,7 +39,7 @@ while True:
 
             ###get window title (ie. file name)
             windowTitle = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-            
+
             filename = windowTitle.split(".pdf")[0] + ".pdf"
             path = "C:/Users/Taras/Desktop/PDFs/"
             fp = open(path + filename, 'rb')
@@ -92,7 +93,42 @@ while True:
                 app_dialog.Minimize()
                 app_dialog.Restore()
 
-                #app.Notepad.Edit.set_edit_text(u"I am typing s\xe4me text to Notepad\r\n\r\n")
                 app.Notepad.Edit.type_keys(u"{END}{ENTER}" + pdfTitle, with_spaces = True)
 
                 app_dialog.Minimize()
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
