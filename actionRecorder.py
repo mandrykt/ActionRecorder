@@ -94,7 +94,7 @@ def filterEvents(eventList):
 
 def closePDF():
     ### close the PDF window
-    subprocess.call(["taskkill", "/f", "/im", "ACROBAT.EXE"])
+    subprocess.call(["taskkill", "/f", "/im", "ACRORD32.EXE"])
 
 def openPDF():
     ### open the file
@@ -109,6 +109,7 @@ def openPDF():
     ### open the file
     filename = windowTitle.split(".pdf")[0] + ".pdf"
     path = "C:/Users/Taras/Desktop/PDFs/"
+    
     fp = open(path + filename, 'rb')
     parser = PDFParser(fp)
     doc = PDFDocument(parser)
@@ -137,12 +138,24 @@ def pasteTitle(pdfTitle):
 
 def endOrRestart():
     userInput = input("Press 'q' to quit or 'r' to restart\n")
-    if userInput == 'q':
-        exit()
-    elif userInput == 'r':
-        start()
-    else:
-        userInput = input("Please press 'q' or 'r'\n")
+    while True:
+        if userInput == 'q':
+            exit()
+        elif userInput == 'r':
+            ### reset global variables
+            global kUnhooked
+            kUnhooked = False
+            global mUnhooked
+            mUnhooked = False
+            global mouseStatus
+            mouseStatus = False
+            global keyboardStatus
+            keyboardStatus = False
+            mouse.hook(OnMouseEvent)
+            keyboard.hook(OnKeyboardEvent)
+            break
+        else:
+            userInput = input("Please press 'q' or 'r'\n")
         
 def getMouseClicks(event):
     global mUnhooked
@@ -150,7 +163,6 @@ def getMouseClicks(event):
     if keyboard.is_pressed("z"):
         if mouse.is_pressed(button="left"):
             mouseClickLocations.append(mouse.get_position())
-            mouseClickLocations = list(set(mouseClickLocations))
     if mouse.is_pressed(button="middle"):
         print("unhooking mouse")
         mouse.unhook(getMouseClicks)
@@ -164,7 +176,7 @@ def userActions(event):
     allEvents = mouseEvents + keyboardEvents
     sortedEvents = sorted(allEvents, key=lambda x: x[-1])
     finalEvents = filterEvents(mouseEvents)
-
+    global kUnhooked
     global mouseClickLocations
     
     if keyboard.is_pressed('a'):
@@ -189,7 +201,7 @@ def userActions(event):
    
 
     if keyboard.is_pressed('space'):
-        for location in mouseClickLocations:
+        for location in list(set(mouseClickLocations)):
             win32api.SetCursorPos((location[0], location[1]))
             document = None
             title = ''
@@ -239,7 +251,7 @@ def OnMouseEvent(event):
         window = GetWindowText(GetForegroundWindow())
         
         ### this is just to get the name of the window if we click on an out of focus window
-        if window == '' and not 0 <= location[0] <= 45 and not 1077 <= location[1] <= 1043:      ### start button on windows
+        if window == '' and not 0 <= location[0] <= 45 and not 765 <= location[1] <= 729:      ### start button on windows
             ### simulate a button click
             pyautogui.click(clicks=1)
         
